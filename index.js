@@ -14,8 +14,8 @@ function changeBackgroundColor() {
 // 2. Reset Background Color
 // ==========================================
 function resetBackgroundColor() {
-    // Reset to empty string so it passes .toBe('') check
-    document.body.style.backgroundColor = "";
+    // CHANGES: Explicitly set to "white" to match test expectation
+    document.body.style.backgroundColor = "white";
 }
 
 // ==========================================
@@ -60,8 +60,8 @@ function setupEventListeners() {
 
     // 2. Double Click Event (Attached to BUTTON, not body, per tests)
     if (resetColorBtn) {
-        resetColorBtn.removeEventListener('dblclick', resetBackgroundColor);
-        resetColorBtn.addEventListener('dblclick', resetBackgroundColor);
+        resetColorBtn.removeEventListener('click', resetBackgroundColor);
+        resetColorBtn.addEventListener('click', resetBackgroundColor);
     }
 
     // 3. Keydown Event (Attached to Document)
