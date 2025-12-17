@@ -2,11 +2,9 @@
 // 1. Change Background Color
 // ==========================================
 function changeBackgroundColor() {
-    // Generate random RGB values
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
-    // Set color in exact 'rgb(x, y, z)' format
     document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
 }
 
@@ -14,7 +12,6 @@ function changeBackgroundColor() {
 // 2. Reset Background Color
 // ==========================================
 function resetBackgroundColor() {
-    // CHANGES: Explicitly set to "white" to match test expectation
     document.body.style.backgroundColor = "white";
 }
 
@@ -24,7 +21,6 @@ function resetBackgroundColor() {
 function displayKeyPress(event) {
     const display = document.getElementById('keyPressDisplay');
     if (display) {
-        // Use event.key directly
         const key = event ? event.key : '';
         display.textContent = `Key pressed: ${key}`;
     }
@@ -43,39 +39,76 @@ function displayUserInput() {
 }
 
 // ==========================================
-// 5. Setup Event Listeners
+// 5. Save Input to Storage (NEW FEATURE)
 // ==========================================
-// The test file calls this function explicitly in beforeEach()
+// This function combines 'keydown' (Enter) and input value access
+function saveToLocalStorage(event) {
+    const input = document.getElementById('textInput');
+    
+    // Check if the key pressed is "Enter"
+    if (event.key === 'Enter' && input) {
+        // Save the value to the browser's Local Storage
+        localStorage.setItem('mySavedText', input.value);
+        
+        // Optional: Alert the user or log to console
+        console.log(`Saved to storage: ${input.value}`);
+        alert(`Saved: "${input.value}"`);
+    }
+}
+
+// Helper: Restore text when page loads
+function loadSavedInput() {
+    const input = document.getElementById('textInput');
+    const display = document.getElementById('textInputDisplay');
+    const savedText = localStorage.getItem('mySavedText');
+
+    if (savedText && input) {
+        input.value = savedText;
+        // Update the display paragraph to match
+        if (display) display.textContent = `You typed: ${savedText}`;
+    }
+}
+
+// ==========================================
+// 6. Setup Event Listeners
+// ==========================================
 function setupEventListeners() {
     const changeColorBtn = document.getElementById('changeColorButton');
     const resetColorBtn = document.getElementById('resetColorButton');
     const textInput = document.getElementById('textInput');
 
+    // Load any saved data immediately
+    loadSavedInput();
+
     // 1. Click Event
     if (changeColorBtn) {
-        // Remove old listener to prevent duplicates (good practice)
         changeColorBtn.removeEventListener('click', changeBackgroundColor);
         changeColorBtn.addEventListener('click', changeBackgroundColor);
     }
 
-    // 2. Double Click Event (Attached to BUTTON, not body, per tests)
+    // 2. Double Click Event
     if (resetColorBtn) {
-        resetColorBtn.removeEventListener('click', resetBackgroundColor);
-        resetColorBtn.addEventListener('click', resetBackgroundColor);
+        resetColorBtn.removeEventListener('dblclick', resetBackgroundColor);
+        resetColorBtn.addEventListener('dblclick', resetBackgroundColor);
     }
 
-    // 3. Keydown Event (Attached to Document)
+    // 3. Keydown Event (Document level)
     document.removeEventListener('keydown', displayKeyPress);
     document.addEventListener('keydown', displayKeyPress);
 
-    // 4. Input Event
+    // 4. Input Event & Save Event
     if (textInput) {
+        // Real-time mirroring
         textInput.removeEventListener('input', displayUserInput);
         textInput.addEventListener('input', displayUserInput);
+
+        // NEW: Save on Enter (Combines Keydown + Input)
+        textInput.removeEventListener('keydown', saveToLocalStorage);
+        textInput.addEventListener('keydown', saveToLocalStorage);
     }
 }
 
-// Initialize listeners when script loads (for manual browser testing)
+// Initialize listeners
 setupEventListeners();
 
 // ==========================================
@@ -87,6 +120,7 @@ if (typeof module !== 'undefined') {
         resetBackgroundColor,
         displayKeyPress,
         displayUserInput,
+        saveToLocalStorage, // Exported for testing
         setupEventListeners
     };
 }
