@@ -12,7 +12,8 @@ function changeBackgroundColor() {
 // 2. Reset Background Color
 // ==========================================
 function resetBackgroundColor() {
-    document.body.style.backgroundColor = "white";
+    // FIX: Clear the style instead of setting it to white
+    document.body.style.backgroundColor = "";
 }
 
 // ==========================================
@@ -21,6 +22,7 @@ function resetBackgroundColor() {
 function displayKeyPress(event) {
     const display = document.getElementById('keyPressDisplay');
     if (display) {
+        // Use event.key directly
         const key = event ? event.key : '';
         display.textContent = `Key pressed: ${key}`;
     }
@@ -39,33 +41,32 @@ function displayUserInput() {
 }
 
 // ==========================================
-// 5. Save Input to Storage (NEW FEATURE)
+// 5. Add Message on Enter (YOUR CUSTOM FEATURE)
 // ==========================================
-// This function combines 'keydown' (Enter) and input value access
-function saveToLocalStorage(event) {
+function addMessage(event) {
     const input = document.getElementById('textInput');
+    let messageContainer = document.getElementById('messageContainer');
     
-    // Check if the key pressed is "Enter"
-    if (event.key === 'Enter' && input) {
-        // Save the value to the browser's Local Storage
-        localStorage.setItem('mySavedText', input.value);
-        
-        // Optional: Alert the user or log to console
-        console.log(`Saved to storage: ${input.value}`);
-        alert(`Saved: "${input.value}"`);
+    // Create container if it doesn't exist
+    if (!messageContainer) {
+        messageContainer = document.createElement('div');
+        messageContainer.id = 'messageContainer';
+        messageContainer.style.marginTop = '20px'; // Style to appear "down"
+        document.body.appendChild(messageContainer);
     }
-}
 
-// Helper: Restore text when page loads
-function loadSavedInput() {
-    const input = document.getElementById('textInput');
-    const display = document.getElementById('textInputDisplay');
-    const savedText = localStorage.getItem('mySavedText');
+    // Check if key is Enter and input is not empty
+    if (event.key === 'Enter' && input && input.value.trim() !== "") {
+        const newMessage = document.createElement('p');
+        newMessage.textContent = `Saved Message: ${input.value}`;
+        
+        // Append to the container
+        messageContainer.appendChild(newMessage);
 
-    if (savedText && input) {
-        input.value = savedText;
-        // Update the display paragraph to match
-        if (display) display.textContent = `You typed: ${savedText}`;
+        // Clear input
+        input.value = '';
+        const display = document.getElementById('textInputDisplay');
+        if(display) display.textContent = "You typed: ";
     }
 }
 
@@ -76,9 +77,6 @@ function setupEventListeners() {
     const changeColorBtn = document.getElementById('changeColorButton');
     const resetColorBtn = document.getElementById('resetColorButton');
     const textInput = document.getElementById('textInput');
-
-    // Load any saved data immediately
-    loadSavedInput();
 
     // 1. Click Event
     if (changeColorBtn) {
@@ -92,19 +90,18 @@ function setupEventListeners() {
         resetColorBtn.addEventListener('dblclick', resetBackgroundColor);
     }
 
-    // 3. Keydown Event (Document level)
+    // 3. Keydown Event (Document)
     document.removeEventListener('keydown', displayKeyPress);
     document.addEventListener('keydown', displayKeyPress);
 
-    // 4. Input Event & Save Event
+    // 4. Input & Custom Message Events
     if (textInput) {
-        // Real-time mirroring
         textInput.removeEventListener('input', displayUserInput);
         textInput.addEventListener('input', displayUserInput);
 
-        // NEW: Save on Enter (Combines Keydown + Input)
-        textInput.removeEventListener('keydown', saveToLocalStorage);
-        textInput.addEventListener('keydown', saveToLocalStorage);
+        // Your custom listener
+        textInput.removeEventListener('keydown', addMessage);
+        textInput.addEventListener('keydown', addMessage);
     }
 }
 
@@ -120,7 +117,6 @@ if (typeof module !== 'undefined') {
         resetBackgroundColor,
         displayKeyPress,
         displayUserInput,
-        saveToLocalStorage, // Exported for testing
         setupEventListeners
     };
 }
