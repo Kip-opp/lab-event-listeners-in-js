@@ -1,83 +1,85 @@
-# Lab: Event Listeners in JavaScript
+# Event Listeners in JavaScript Lab
 
-## Introduction
+This project demonstrates how to use JavaScript event listeners to build an interactive web interface. It covers responding to user actions such as button clicks, keyboard input, and text field changes — which are core patterns in modern DOM manipulation. [web:285]
 
-As a new developer at a tech company, you are tasked with creating a dynamic user interface for a simple web application. You’ll add interactive features using event listeners to respond to user actions like clicking buttons and pressing keys. This is a common task in modern web development, where creating responsive and engaging interfaces is crucial.
+## Features
 
-## Challenge
+- Background color changes on button click, resets on double-click.
+- Displays the last key pressed by the user in real time.
+- Mirrors typed text to the page as the user inputs it.
+- Combines multiple event types for more dynamic interaction.
+- Bonus: hover effects and form submission handling.
 
-1. Handle Button Clicks
-2. Capture Keyboard Input
-3. Process Text Input
-4. Combine Multiple Events
+## Core Functionality
 
-## Bonus Challenge
+### Button Click
+`changeBackgroundColor()` is attached to a click event and updates the page background color. `resetBackgroundColor()` is attached to a double-click event and resets the background to white. [web:285]
 
-5. Implement Additional Features
+### Keyboard Input
+`displayKeyPress(event)` listens on the `keydown` event of the `document` and updates a paragraph with the name of the key pressed. The `event.key` property is used to capture the value. [web:285]
 
-## Instructions
+### Text Input
+`displayUserInput()` is attached to the `input` event of a text field and renders the current value to a paragraph in real time as the user types. [web:285]
 
-1. **Fork and Clone the Repository:**
-   - Go to the provided GitHub repository link.
-   - Fork the repository to your GitHub account.
-   - Clone the forked repository to your local machine.
-   - Open the project in VSCode.
-   - Run `npm install` to install all necessary dependencies.
+### Combined Events
+A function that integrates click, keydown, and input events to create multi-trigger interactions and more dynamic page behavior.
 
-2. **Handle Button Clicks**
-   - Create a function `changeBackgroundColor()` that changes the background color of the page when a button is clicked.
-   - Reset the background color to white by building a function `resetBackgroundColor()` and attaching it to a double-click event.
-
-3. **Capture Keyboard Input**
-   - Build a function `displayKeyPress(event)` that updates a paragraph to display the key pressed by the user.
-   - Attach the function to a keydown event listener on the document.
-
-4. **Process Text Input**
-   - Create a function `displayUserInput()` that shows real-time input in a paragraph as the user types into a text field.
-   - Attach the function to the input event of a text field.
-
-5. **Combine Multiple Events**
-   - Develop a function that integrates button clicks, key presses, and text input to create more dynamic interactions on the page.
-   - Apply event listeners to perform different tasks based on user interactions.
-
-6. **BONUS CHALLENGE: Implement Additional Features**
-   - Explore additional event types and integrate more complex interactivity.
-   - Ensure the application responds smoothly to rapid user interactions.
-
-## BONUS: Additional Event Handling
-
-Handling additional user interactions can further enhance the user experience. Here are some ideas:
-
-### `mouseover` and `mouseout`
-
-Use `mouseover` and `mouseout` events to change element styles when hovering over them:
+## Bonus: Additional Event Handling
 
 ```js
-someElement.addEventListener('mouseover', () => {
-  someElement.style.backgroundColor = 'yellow';
+// Hover effects
+element.addEventListener('mouseover', () => {
+  element.style.backgroundColor = 'yellow';
 });
 
-someElement.addEventListener('mouseout', () => {
-  someElement.style.backgroundColor = 'initial';
+element.addEventListener('mouseout', () => {
+  element.style.backgroundColor = 'initial';
 });
-```
 
-### `submit` Event
-
-Handle form submissions to process user inputs:
-
-```js
-formElement.addEventListener('submit', (event) => {
+// Form submission
+form.addEventListener('submit', (event) => {
   event.preventDefault();
-  // Process form data
+  // process form data
 });
 ```
+
+## Setup
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Open `index.html` in a browser or use Live Server in VS Code to run the project.
+
+Run the test suite:
+
+```bash
+npm test
+```
+
+## File Structure
+
+```bash
+├── index.html
+├── index.js
+├── style.css
+└── tests/
+```
+
+## Key Concepts
+
+- `addEventListener(type, callback)` attaches a handler to a DOM element without overwriting existing ones.
+- `event.key` returns the specific key pressed from a `KeyboardEvent`.
+- The `input` event fires on every keystroke and is ideal for real-time field mirroring.
+- `event.preventDefault()` stops default browser behavior like form submission page reload.
+
+
 
 ## Resources
 
-- [document.createElement()](https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement)
-- [append()](https://developer.mozilla.org/en-US/docs/Web/API/Element/append)
-- [addEventListener()](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener)
-- [KeyboardEvent](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent)
-- [Input Event](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/input_event)
-- [Form Submission Event](https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/submit_event)
+- [addEventListener() — MDN](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener)
+- [KeyboardEvent — MDN](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent)
+- [Input Event — MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/input_event)
+- [Form Submit Event — MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/submit_event)
